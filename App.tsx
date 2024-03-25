@@ -12,7 +12,6 @@ type TodoState = {
 export default function App() {
 
     const [value, setValue] = useState('')
-
     const [tasks, setTasks] = useState<TodoState[]>([
         {id: 1, title: 'HTML', isDone: true},
         {id: 2, title: 'CSS', isDone: true},
@@ -21,15 +20,19 @@ export default function App() {
         {id: 5, title: 'React native', isDone: false},
         {id: 6, title: 'Vue', isDone: false}
     ])
+    //console.log('tasks:', tasks)
 
     const addTask = () => {
         const newTask = {id: tasks.length + 1, title: value, isDone: false};
         setTasks([...tasks, newTask]);
         setValue('')
+        //Alert.alert(JSON.stringify(newTask))
     };
 
+    const changeStatus = (taskId: number, status: boolean) => {
+        setTasks(tasks.map((task) => task.id === taskId ? {...task, isDone: status} : task))
+    }
 
-//Alert.alert(JSON.stringify(newTask))
     return (
         <View style={styles.container}>
             <HideKeyboard>
@@ -44,8 +47,8 @@ export default function App() {
             <View style={{width: '60%'}}>
                 {tasks.map((task) => {
                     return <View key={task.id} style={[globalStyles.border, styles.boxTask]}>
-                        <Checkbox value={task.isDone} onValueChange={() => {
-                        }} color={'red'}/>
+                        <Checkbox value={task.isDone} onValueChange={(value) => changeStatus(task.id, value)
+                        } color={'red'}/>
                         <Text style={{color: '#fff'}}>{task.title}</Text>
                     </View>
                 })}

@@ -1,6 +1,8 @@
 import {Alert, Button, Keyboard, StyleSheet, Text, TextInput, TouchableNativeFeedback, View} from 'react-native';
 import React, {ReactElement, ReactNode, useState} from "react";
 import Checkbox from "expo-checkbox";
+import {Input} from "./input/Input";
+import {globalStyles} from "./utils/globalStyles";
 
 
 type TodoState = {
@@ -11,7 +13,9 @@ type TodoState = {
 
 export default function App() {
 
-    const [value, setValue] = useState('')
+    const [value, setValue] = useState<string>('')
+    const [show, setShow] = useState<number>(0)
+    // const [newTitle, setNewTitle] = useState<string>('')
     const [tasks, setTasks] = useState<TodoState[]>([
         {id: 1, title: 'HTML', isDone: true},
         {id: 2, title: 'CSS', isDone: true},
@@ -20,6 +24,7 @@ export default function App() {
         {id: 5, title: 'React native', isDone: false},
         {id: 6, title: 'Vue', isDone: false}
     ])
+    //console.log('newTitle', newTitle);
     //console.log('tasks:', tasks)
 
     const addTask = () => {
@@ -31,6 +36,9 @@ export default function App() {
 
     const changeStatus = (taskId: number, status: boolean) => {
         setTasks(tasks.map((task) => task.id === taskId ? {...task, isDone: status} : task))
+    }
+    const changeTitle = (taskId: number, title: string) => {
+        setTasks(tasks.map((task) => task.id === taskId ? {...task, title} : task))
     }
 
     return (
@@ -49,7 +57,13 @@ export default function App() {
                     return <View key={task.id} style={[globalStyles.border, styles.boxTask]}>
                         <Checkbox value={task.isDone} onValueChange={(value) => changeStatus(task.id, value)
                         } color={'red'}/>
-                        <Text style={{color: '#fff'}}>{task.title}</Text>
+                        {show === task.id
+                            ? <Input id={task.id}
+                                     title={task.title} changeValue={changeTitle}
+                            setShow={setShow}/>
+                            : <Text style={{color: '#fff'}} onPress={() => {
+                                setShow(task.id)
+                            }}>{task.title}</Text>}
                     </View>
                 })}
             </View>
@@ -91,11 +105,5 @@ const styles = StyleSheet.create({
 
 });
 
-const globalStyles = StyleSheet.create({
-    border: {
-        borderStyle: 'solid',
-        borderWidth: 1,
-        borderColor: 'red'
-    }
-});
+
 

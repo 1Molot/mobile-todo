@@ -1,11 +1,22 @@
-import {Alert, Button, Keyboard, StyleSheet, Text, TextInput, TouchableNativeFeedback, View} from 'react-native';
-import React, {ReactElement, ReactNode, useState} from "react";
+import {
+    Alert,
+    Button,
+    FlatList,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableNativeFeedback,
+    View
+} from 'react-native';
+import React, {useState} from "react";
 import Checkbox from "expo-checkbox";
-import {Input} from "./input/Input";
+import {Input} from "./components/input/Input";
 import {globalStyles} from "./utils/globalStyles";
+import {HideKeyboard} from "./utils/hideKeyboard";
 
 
-type TodoState = {
+type Task = {
     id: number,
     title: string,
     isDone: boolean
@@ -15,23 +26,19 @@ export default function App() {
 
     const [value, setValue] = useState<string>('')
     const [show, setShow] = useState<number>(0)
-    // const [newTitle, setNewTitle] = useState<string>('')
-    const [tasks, setTasks] = useState<TodoState[]>([
-        {id: 1, title: 'HTML', isDone: true},
-        {id: 2, title: 'CSS', isDone: true},
-        {id: 3, title: 'JS', isDone: true},
-        {id: 4, title: 'React', isDone: true},
-        {id: 5, title: 'React native', isDone: false},
-        {id: 6, title: 'Vue', isDone: false}
+    const [tasks, setTasks] = useState<Task[]>([
+        {id: 1, title: 'Молоко', isDone: false},
+        {id: 2, title: 'Хлеб', isDone: false},
     ])
-    //console.log('newTitle', newTitle);
-    //console.log('tasks:', tasks)
 
     const addTask = () => {
+        if (value.trim() === '') {
+            Alert.alert('Введите название продукта');
+            return;
+        }
         const newTask = {id: tasks.length + 1, title: value, isDone: false};
         setTasks([...tasks, newTask]);
         setValue('')
-        //Alert.alert(JSON.stringify(newTask))
     };
 
     const changeStatus = (taskId: number, status: boolean) => {
@@ -41,69 +48,102 @@ export default function App() {
         setTasks(tasks.map((task) => task.id === taskId ? {...task, title} : task))
     }
 
+    const deleteTask = (taskId: number) => {
+        setTasks(tasks.filter((task) => task.id !== taskId));
+    };
+
+    const render = ({item}: { item: Task }) => {
+        return (
+            <View style={[globalStyles.border, styles.boxTask]}>
+                <Checkbox value={item.isDone} onValueChange={(value) => changeStatus(item.id, value)
+                } color={'#ff8906'}/>
+                {show === item.id ? (
+                    <Input id={item.id} title={item.title} changeValue={changeTitle} setShow={setShow}/>
+                ) : (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+
+                        <Text style={{color: '#fff'}} onPress={() => {
+                            setShow(item.id)
+                        }}>{item.title}</Text>
+
+                        <TouchableNativeFeedback onPress={() => deleteTask(item.id)}>
+                            <View style={{
+                                backgroundColor: '#ff8906',
+                                padding: 5,
+                                borderRadius: 5,
+                                marginLeft: 15
+                            }}>
+                                <Text style={{color: '#fff'}}>Delete</Text>
+                            </View>
+                        </TouchableNativeFeedback>
+                    </View>
+                )}
+            </View>
+        )
+    }
+
     return (
         <View style={styles.container}>
+            <View style={styles.headerTitle}>
+                <Text style={{color: '#ff8906', elevation: 5, fontSize: 20}}>{'Список продуктов'}</Text>
+            </View>
             <HideKeyboard>
                 <View style={[{width: '80%', alignItems: 'center', paddingVertical: 20}]}>
                     <TextInput style={styles.input} value={value} onChangeText={setValue}/>
                 </View>
             </HideKeyboard>
-            <View style={[globalStyles.border, {backgroundColor: '#ff8906'}]}>
-                <Button color={'#0f0e17'} title={'Add task'} onPress={addTask}/>
+            <View style={styles.addProduct}>
+                <Button color={'#6246ea'} title={'Добавить продукт'} onPress={addTask}/>
             </View>
 
-            <View style={{width: '60%'}}>
-                {tasks.map((task) => {
-                    return <View key={task.id} style={[globalStyles.border, styles.boxTask]}>
-                        <Checkbox value={task.isDone} onValueChange={(value) => changeStatus(task.id, value)
-                        } color={'red'}/>
-                        {show === task.id
-                            ? <Input id={task.id}
-                                     title={task.title} changeValue={changeTitle}
-                            setShow={setShow}/>
-                            : <Text style={{color: '#fff'}} onPress={() => {
-                                setShow(task.id)
-                            }}>{task.title}</Text>}
-                    </View>
-                })}
-            </View>
+            <ScrollView style={styles.contentContainer}>
 
+
+                <FlatList data={tasks} renderItem={render} keyExtractor={item => `${item.id}`}/>
+
+            </ScrollView>
         </View>
     );
 }
 
-//утилита для фокуса,вынести отдельно
-const HideKeyboard = ({children}: { children: ReactNode }): ReactElement => (
-    <TouchableNativeFeedback onPress={() => Keyboard.dismiss()}>
-        {children}
-    </TouchableNativeFeedback>
-)
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#0f0e17',
+        paddingTop: 200,
+
+        //backgroundColor: '#0f0e17',
+        backgroundColor: '#135e5e',
         alignItems: 'center',
         justifyContent: 'center',
+        height: '100%',
+
+    },
+    headerTitle: {},
+    addProduct: {marginBottom: 10, borderColor: '#ff8906', elevation: 5, shadowColor: '#ff8906',},
+    contentContainer: {
+        paddingHorizontal: 40
+        //flex: 1,
     },
     input: {
         width: '80%',
         backgroundColor: '#fff',
         fontSize: 18,
         padding: 4,
-        //marginBottom:15
     },
     boxTask: {
+        width: '100%',
         flexDirection: 'row',
-        //borderColor: '#fffffe',
         borderColor: 'green',
         justifyContent: 'space-between',
+        alignItems: 'center',
         paddingVertical: 4,
         paddingHorizontal: 20,
         marginVertical: 3
     },
-
 });
+
+
 
 
 

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, StyleSheet, TextInput, View} from "react-native";
-import {globalStyles} from "../utils/globalStyles";
+import {globalStyles} from "../../utils/globalStyles";
 
 
 type InputProps = {
@@ -17,9 +17,11 @@ const Input = ({title, id, changeValue, setShow}: InputProps) => {
     const changeTitle = (title: string) => {
         setValue(title);
     }
+
+
     return (
         <View style={{flexDirection: 'row'}}>
-            <TextInput style={[styles.input, globalStyles.border]} value={value}
+            <TextInput style={[styles.input, globalStyles.border, {elevation: 5}]} value={value}
                        onChangeText={(title) => changeTitle(title)}
             />
             <Button title={'+'} onPress={() => {
@@ -37,7 +39,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         fontSize: 18,
         padding: 4,
-        //marginBottom:15
     },
 })
 

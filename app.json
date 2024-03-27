@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "mobile-todo",
-    "slug": "mobile-todo",
+    "slug": "mobiletodo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,10 +21,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "versionCode": 1,
+      "package": "com.todo.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9cc4ede9-c661-4d99-b2b7-efa88b10b866"
+      }
+    },
+    "owner": "1molot"
   }
 }

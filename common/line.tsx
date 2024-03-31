@@ -3,7 +3,6 @@ import {StyleSheet, View} from "react-native";
 
 const Line = () => {
 
-
     return (
         <View style={styles.line}>
 
@@ -18,9 +17,9 @@ const styles = StyleSheet.create({
         top: '35%',
         left: 0,
         width: '100%',
-        height: 1.5,
+        height: 2,
         backgroundColor: 'black',
-        zIndex:2,
+        zIndex:1,
     },
 })
 

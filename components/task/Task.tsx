@@ -23,7 +23,6 @@ const TaskItem = ({item, show, setShow, changeStatus, changeTitle, deleteTask,}:
             {show === item.id ? (
                 <Input id={item.id} title={item.title} changeValue={changeTitle} setShow={setShow}/>
             ) : (
-
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <View style={{position: 'relative'}}>
                         {item.isDone && <Line/>}

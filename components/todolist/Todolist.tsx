@@ -1,5 +1,17 @@
 import React, {useState} from 'react';
-import {Alert, Button, FlatList, StyleSheet, Text, TextInput,StatusBar, View} from 'react-native';
+import {
+    Alert,
+    Button,
+    FlatList,
+    StyleSheet,
+    ImageBackground,
+    Text,
+    TextInput,
+    StatusBar,
+    View,
+    KeyboardAvoidingView,
+    Platform
+} from 'react-native';
 import {HideKeyboard} from "../../utils/hideKeyboard";
 import TaskItem from "../task/Task";
 import {Task} from "../../common/types";
@@ -10,7 +22,6 @@ const Todolist = () => {
     const [show, setShow] = useState<number>(0)
     const [tasks, setTasks] = useState<Task[]>([
         {id: 1, title: 'Молоко', isDone: false},
-        {id: 2, title: 'Хлеб', isDone: false},
     ])
 
     const addTask = () => {
@@ -47,10 +58,18 @@ const Todolist = () => {
         );
     };
 
-
     return (
-        <View style={styles.container}>
-            <View>
+        // <KeyboardAvoidingView
+        //     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        //  style={{flex:1}}
+        // >
+        <ImageBackground
+            source={require('../../assets/potato.jpg')}
+            resizeMode={'cover'}
+            style={styles.container}
+            blurRadius={1}
+        >
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={{color: '#ff8906', elevation: 5, fontSize: 20}}>{'Список продуктов'}</Text>
             </View>
             <HideKeyboard>
@@ -64,24 +83,20 @@ const Todolist = () => {
             <View style={styles.contentContainer}>
                 <FlatList data={tasks} renderItem={renderTask} keyExtractor={item => `${item.id}`}/>
             </View>
-        </View>
+        </ImageBackground>
+        // </KeyboardAvoidingView>
     );
 }
 
 export default Todolist;
 
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 200,
-        //backgroundColor: '#0f0e17',
-        backgroundColor: '#135e5e',
+        paddingTop: 150,
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100%',
-
     },
     addProduct: {
         marginBottom: 10,

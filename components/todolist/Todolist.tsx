@@ -1,4 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {HideKeyboard} from "../../utils/hideKeyboard";
+import TaskItem from "../task/Task";
+import {Task} from "../../common/types";
 import {
     Alert,
     Button,
@@ -7,14 +10,11 @@ import {
     ImageBackground,
     Text,
     TextInput,
-    StatusBar,
     View,
-    KeyboardAvoidingView,
-    Platform
 } from 'react-native';
-import {HideKeyboard} from "../../utils/hideKeyboard";
-import TaskItem from "../task/Task";
-import {Task} from "../../common/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
 
 const Todolist = () => {
 
@@ -24,14 +24,25 @@ const Todolist = () => {
         {id: 1, title: 'Молоко', isDone: false},
     ])
 
+    const saveTasksToStorage = async (tasks: Task[]) => {
+        try {
+            const tasksJSON = JSON.stringify(tasks);
+            await AsyncStorage.setItem('tasks', tasksJSON);
+        } catch (error) {
+            console.error('Error saving tasks to AsyncStorage:', error);
+        }
+    };
+
     const addTask = () => {
         if (value.trim() === '') {
             Alert.alert('Введите название продукта');
             return;
         }
         const newTask = {id: tasks.length + 1, title: value, isDone: false};
-        setTasks([...tasks, newTask]);
+        const updatedTasks = [...tasks, newTask];
+        setTasks(updatedTasks);
         setValue('')
+        saveTasksToStorage(updatedTasks);
     };
 
     const changeStatus = (taskId: number, status: boolean) => {
@@ -58,11 +69,24 @@ const Todolist = () => {
         );
     };
 
+    const loadTasksFromStorage = async () => {
+        try {
+            const tasksJSON = await AsyncStorage.getItem('tasks');
+            if (tasksJSON) {
+                const tasks = JSON.parse(tasksJSON);
+                setTasks(tasks);
+            }
+        } catch (error) {
+            console.error('Error loading tasks from AsyncStorage:', error);
+        }
+    };
+
+    useEffect(() => {
+        loadTasksFromStorage();
+    }, []);
+
     return (
-        // <KeyboardAvoidingView
-        //     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        //  style={{flex:1}}
-        // >
+
         <ImageBackground
             source={require('../../assets/potato.jpg')}
             resizeMode={'cover'}
@@ -70,11 +94,11 @@ const Todolist = () => {
             blurRadius={1}
         >
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={{color: '#ff8906', elevation: 5, fontSize: 20}}>{'Список продуктов'}</Text>
+                <Text style={{color: '#f35306', elevation: 5, fontSize: 20}}>{'Список продуктов'}</Text>
             </View>
-            <HideKeyboard>
+           <HideKeyboard>
                 <View style={[{width: '80%', alignItems: 'center', paddingVertical: 20}]}>
-                    <TextInput style={styles.input} value={value} onChangeText={setValue}/>
+                    <TextInput style={styles.input} value={value} onChangeText={setValue} placeholder={'Введите текст'}/>
                 </View>
             </HideKeyboard>
             <View style={styles.addProduct}>
@@ -84,7 +108,7 @@ const Todolist = () => {
                 <FlatList data={tasks} renderItem={renderTask} keyExtractor={item => `${item.id}`}/>
             </View>
         </ImageBackground>
-        // </KeyboardAvoidingView>
+
     );
 }
 

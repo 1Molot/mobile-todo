@@ -4,6 +4,7 @@ import Checkbox from 'expo-checkbox';
 import {globalStyles} from "../../common/globalStyles";
 import {Input} from "../input/Input";
 import {Task} from "../../common/types";
+import Line from "../../common/line";
 
 
 type TaskItem = {
@@ -15,17 +16,22 @@ type TaskItem = {
     deleteTask: (taskId: number) => void;
 }
 
-const TaskItem = ({item, show, setShow, changeStatus, changeTitle, deleteTask}: TaskItem) => {
+const TaskItem = ({item, show, setShow, changeStatus, changeTitle, deleteTask,}: TaskItem) => {
     return (
         <View style={[globalStyles.border, styles.boxTask]}>
             <Checkbox value={item.isDone} onValueChange={(value) => changeStatus(item.id, value)} color={'#ff8906'}/>
             {show === item.id ? (
                 <Input id={item.id} title={item.title} changeValue={changeTitle} setShow={setShow}/>
             ) : (
+
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={{color: '#fff'}} onPress={() => setShow(item.id)}>
-                        {item.title}
-                    </Text>
+                    <View style={{position: 'relative'}}>
+                        {item.isDone && <Line/>}
+                        <Text style={{color: '#fff'}} onPress={() => setShow(item.id)}>
+                            {item.title}
+                        </Text>
+                    </View>
+
                     <TouchableNativeFeedback onPress={() => deleteTask(item.id)}>
                         <View
                             style={{
@@ -55,6 +61,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginVertical: 3,
     },
+    strikethrough:{
+        textDecorationLine : 'line-through',
+    }
 });
 
 export default TaskItem;

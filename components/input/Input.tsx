@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, StyleSheet, TextInput, View} from "react-native";
-import {globalStyles} from "../../utils/globalStyles";
+import {globalStyles} from "../../common/globalStyles";
 
 
 type InputProps = {

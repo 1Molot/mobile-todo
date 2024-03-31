@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, Text, TouchableNativeFeedback, StyleSheet} from 'react-native';
 import Checkbox from 'expo-checkbox';
-import {Task} from "../../App";
-import {globalStyles} from "../../utils/globalStyles";
+import {globalStyles} from "../../common/globalStyles";
 import {Input} from "../input/Input";
+import {Task} from "../../common/types";
 
 
 type TaskItem = {

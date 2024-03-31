@@ -33,7 +33,7 @@ const Todolist = () => {
         }
     };
 
-    const addTask = () => {
+    const addTask = async () => {
         if (value.trim() === '') {
             Alert.alert('Введите название продукта');
             return;
@@ -42,7 +42,7 @@ const Todolist = () => {
         const updatedTasks = [...tasks, newTask];
         setTasks(updatedTasks);
         setValue('')
-        saveTasksToStorage(updatedTasks);
+       await saveTasksToStorage(updatedTasks);
     };
 
     const changeStatus = (taskId: number, status: boolean) => {
@@ -82,7 +82,9 @@ const Todolist = () => {
     };
 
     useEffect(() => {
-        loadTasksFromStorage();
+        (async () => {
+            await loadTasksFromStorage();
+        })();
     }, []);
 
     return (

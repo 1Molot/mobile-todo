@@ -14,12 +14,12 @@ const Line = () => {
 const styles = StyleSheet.create({
     line: {
         position:'absolute',
-        top: '35%',
+        top: '48%',
         left: 0,
         width: '100%',
-        height: 2,
+        height: 2.5,
         backgroundColor: 'black',
-        zIndex:1,
+        zIndex:5,
     },
 })
 

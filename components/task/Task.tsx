@@ -9,24 +9,24 @@ import Line from "../../common/line";
 
 type TaskItem = {
     item: Task;
-    show: number;
-    setShow: (taskId: number) => void;
-    changeStatus: (taskId: number, status: boolean) => void;
-    changeTitle: (taskId: number, title: string) => void;
-    deleteTask: (taskId: number) => void;
+    show: string;
+    setShow: (taskId: string) => void;
+    changeStatus: (taskId: string, status: boolean) => void;
+    changeTitle: (taskId: string, title: string) => void;
+    deleteTask: (taskId: string) => void;
 }
 
 const TaskItem = ({item, show, setShow, changeStatus, changeTitle, deleteTask,}: TaskItem) => {
     return (
         <View style={[globalStyles.border, styles.boxTask]}>
-            <Checkbox value={item.isDone} onValueChange={(value) => changeStatus(item.id, value)} color={'#ff8906'}/>
+            <Checkbox value={item.isDone} onValueChange={(value) => changeStatus(item.id, value)} color={'rgba(255,255,255,0.55)'}/>
             {show === item.id ? (
-                <Input id={item.id} title={item.title} changeValue={changeTitle} setShow={setShow}/>
+                <Input id={item.id} title={item.title} changeValue={changeTitle} setShow={setShow} />
             ) : (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <View style={{position: 'relative'}}>
                         {item.isDone && <Line/>}
-                        <Text style={{color: '#fff'}} onPress={() => setShow(item.id)}>
+                        <Text style={{color: '#fff',fontSize:18,fontWeight:'bold'}} onPress={() => setShow(item.id)}>
                             {item.title}
                         </Text>
                     </View>
@@ -37,7 +37,7 @@ const TaskItem = ({item, show, setShow, changeStatus, changeTitle, deleteTask,}:
                                 backgroundColor: '#ff8906',
                                 padding: 5,
                                 borderRadius: 5,
-                                marginLeft: 15,
+                                marginLeft: 10,
                             }}
                         >
                             <Text style={{color: '#fff'}}>Delete</Text>
@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         paddingHorizontal: 20,
         marginVertical: 3,
+        gap:10,
     },
     strikethrough:{
         textDecorationLine : 'line-through',

@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
-import {Button, StyleSheet, TextInput, View} from "react-native";
+import {Button, StyleSheet, TextInput, View, KeyboardAvoidingView, Platform} from "react-native";
 import {globalStyles} from "../../common/globalStyles";
+import HideKeyboard from "../../utils/hideKeyboard";
 
 
 type InputProps = {
-    id: number;
+    id: string;
     title: string;
-    changeValue: (taskId: number, title: string) => void;
-    setShow: (taskId: number) => void;
+    changeValue: (taskId: string, title: string) => void;
+    setShow: (taskId: string) => void;
 }
 
 const Input = ({title, id, changeValue, setShow}: InputProps) => {
@@ -20,14 +21,18 @@ const Input = ({title, id, changeValue, setShow}: InputProps) => {
 
 
     return (
-        <View style={{flexDirection: 'row'}}>
+        <View style={{flex: 1, flexDirection: 'row', gap: 10}}>
+            <HideKeyboard>
             <TextInput style={[styles.input, globalStyles.border, {elevation: 5}]} value={value}
-                       onChangeText={(title) => changeTitle(title)}
+                       onChangeText={(title) => changeTitle(title)} autoFocus maxLength={19}
             />
-            <Button title={'+'} onPress={() => {
-                changeValue(id, value)
-                setShow(0)
-            }}/>
+            </HideKeyboard>
+            <View style={{width: 50}}>
+                <Button title={'+'} onPress={() => {
+                    changeValue(id, value)
+                    setShow('')
+                }}/>
+            </View>
         </View>
     );
 };
@@ -35,9 +40,9 @@ const Input = ({title, id, changeValue, setShow}: InputProps) => {
 
 const styles = StyleSheet.create({
     input: {
-        width: '80%',
+        width: '75%',
         backgroundColor: '#fff',
-        fontSize: 18,
+        fontSize: 15,
         padding: 4,
     },
 })
